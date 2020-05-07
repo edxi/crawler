@@ -18,15 +18,22 @@ func ParseCityList(contents []byte) engine.ParseResult {
 	// 初始化一个空的ParseResult
 	result := engine.ParseResult{}
 
+	limit := 1
+
 	// 把匹配到的内容逐个放进ParseResult
 	for _, m := range matches {
 		result.Items = append(
-			result.Items, string(m[2]))
+			result.Items, "City "+string(m[2]))
 		result.Requests = append(
 			result.Requests, engine.Request{
 				Url:        string(m[1]),
-				ParserFunc: engine.NilParser, //当还没有决定request用什么parserfunc的时候，使用NilParser
+				ParserFunc: ParseCity,
 			})
+
+		limit--
+		if limit == 0 {
+			break
+		}
 	}
 
 	return result
